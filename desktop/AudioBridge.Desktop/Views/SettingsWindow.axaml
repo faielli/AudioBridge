@@ -1,0 +1,242 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:AudioBridge.Desktop.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="560" d:DesignHeight="600"
+        x:Class="AudioBridge.Desktop.Views.SettingsWindow"
+        x:DataType="vm:SettingsViewModel"
+        Title="Impostazioni — AudioBridge"
+        Background="{DynamicResource BackgroundBrush}"
+        Width="560" Height="640"
+        MinWidth="420" MinHeight="420">
+
+    <Window.Resources>
+        <SolidColorBrush x:Key="TabHeaderBrush" Color="{DynamicResource Color.Surface}" />
+    </Window.Resources>
+
+    <Grid RowDefinitions="Auto,*,Auto" Margin="0">
+
+        <!-- Title bar -->
+        <Border Grid.Row="0" Padding="24,20,24,12"
+                Background="{DynamicResource SurfaceBrush}">
+            <TextBlock Classes="title" Text="Impostazioni" />
+        </Border>
+
+        <!-- Tabs -->
+        <TabControl Grid.Row="1"
+                    Margin="24,8,24,24"
+                    Background="Transparent"
+                    BorderThickness="0">
+            <TabControl.Styles>
+                <Style Selector="TabControl > TabStrip > TabStripItem">
+                    <Setter Property="Background" Value="Transparent" />
+                    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}" />
+                    <Setter Property="FontFamily" Value="{DynamicResource FontFamily.UI}" />
+                    <Setter Property="FontSize" Value="14" />
+                    <Setter Property="FontWeight" Value="Medium" />
+                    <Setter Property="Padding" Value="16,10" />
+                    <Setter Property="CornerRadius" Value="{DynamicResource Radius.Input}" />
+                </Style>
+                <Style Selector="TabControl > TabStrip > TabStripItem:selected">
+                    <Setter Property="Background" Value="{DynamicResource SurfaceBrush}" />
+                    <Setter Property="Foreground" Value="{DynamicResource AccentPrimaryBrush}" />
+                </Style>
+                <Style Selector="TabControl > TabStrip > TabStripItem:pointerover">
+                    <Setter Property="Background" Value="{DynamicResource SurfaceElevatedBrush}" />
+                </Style>
+            </TabControl.Styles>
+
+            <!-- ========== TAB 1 — AUDIO ========== -->
+            <TabItem Header="Audio">
+                <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+                    <StackPanel Spacing="20" Margin="0,16,0,0">
+
+                        <!-- Sorgente audio -->
+                        <Border Classes="card-default">
+                            <StackPanel Spacing="12">
+                                <TextBlock Classes="label" Text="Sorgente audio" />
+                                <ComboBox ItemsSource="{Binding AudioDevices}"
+                                          SelectedItem="{Binding SelectedAudioDevice}"
+                                          HorizontalAlignment="Stretch" />
+                                <TextBlock Classes="body-small"
+                                           Text="Dispositivo di output da catturare (loopback)" />
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Sample rate + Canali -->
+                        <Border Classes="card-default">
+                            <StackPanel Spacing="12">
+                                <TextBlock Classes="label" Text="Frequenza di campionamento" />
+                                <ComboBox ItemsSource="{Binding SampleRateOptions}"
+                                          SelectedItem="{Binding SelectedSampleRate}"
+                                          HorizontalAlignment="Stretch" />
+                                <Separator />
+                                <StackPanel Orientation="Horizontal" Spacing="12">
+                                    <TextBlock Classes="body" Text="Canali" VerticalAlignment="Center" />
+                                    <ToggleSwitch IsChecked="{Binding IsStereo}"
+                                                  OffContent="Mono"
+                                                  OnContent="Stereo" />
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Bitrate Opus -->
+                        <Border Classes="card-default">
+                            <StackPanel Spacing="12">
+                                <TextBlock Classes="label" Text="Bitrate Opus" />
+                                <StackPanel Orientation="Horizontal" Spacing="12">
+                                    <Slider Minimum="64" Maximum="320" TickFrequency="16"
+                                            Value="{Binding BitrateKbps}"
+                                            Width="240"
+                                            VerticalAlignment="Center" />
+                                    <TextBlock Classes="numeric"
+                                               Text="{Binding BitrateKbps, StringFormat='{}{0} kbps'}"
+                                               Width="80" />
+                                </StackPanel>
+                                <TextBlock Classes="body-small"
+                                           Text="Valori più alti = migliore qualità, più banda. 128-256 kbps consigliato." />
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Frame size -->
+                        <Border Classes="card-default">
+                            <StackPanel Spacing="12">
+                                <TextBlock Classes="label" Text="Dimensione frame Opus" />
+                                <StackPanel Orientation="Horizontal" Spacing="12">
+                                    <ComboBox ItemsSource="{Binding ValidFrameSizes}"
+                                              SelectedItem="{Binding SelectedFrameSizeMs}"
+                                              Width="120" />
+                                    <TextBlock Classes="body" Text="ms" VerticalAlignment="Center" />
+                                </StackPanel>
+                                <TextBlock Classes="body-small"
+                                           Text="Valori più bassi = meno ritardo, più rischio di interruzioni. 10 ms per gaming, 20 ms per musica." />
+                            </StackPanel>
+                        </Border>
+
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+
+            <!-- ========== TAB 2 — RETE ========== -->
+            <TabItem Header="Rete">
+                <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+                    <StackPanel Spacing="20" Margin="0,16,0,0">
+
+                        <!-- Porte -->
+                        <Border Classes="card-default">
+                            <StackPanel Spacing="12">
+                                <TextBlock Classes="label" Text="Porte di rete" />
+                                <StackPanel Spacing="10">
+                                    <Grid ColumnDefinitions="Auto,*">
+                                        <TextBlock Grid.Column="0" Classes="body" Text="Porta UDP dati" VerticalAlignment="Center" Margin="0,0,16,0" />
+                                        <TextBox Grid.Column="1" Text="{Binding UdpPort}" Width="120" HorizontalAlignment="Left" />
+                                    </Grid>
+                                    <Grid ColumnDefinitions="Auto,*">
+                                        <TextBlock Grid.Column="0" Classes="body" Text="Porta TCP controllo" VerticalAlignment="Center" Margin="0,0,16,0" />
+                                        <TextBox Grid.Column="1" Text="{Binding TcpControlPort}" Width="120" HorizontalAlignment="Left" />
+                                    </Grid>
+                                </StackPanel>
+                                <TextBlock Classes="body-small"
+                                           Text="Modifica solo se in conflitto con altre applicazioni." />
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Buffer di rete -->
+                        <Border Classes="card-default">
+                            <StackPanel Spacing="12">
+                                <TextBlock Classes="label" Text="Buffer di rete (lato Android)" />
+                                <StackPanel Orientation="Horizontal" Spacing="12">
+                                    <Slider Minimum="10" Maximum="200" TickFrequency="10"
+                                            Value="{Binding NetworkBufferMs}"
+                                            Width="240"
+                                            VerticalAlignment="Center" />
+                                    <TextBlock Classes="numeric"
+                                               Text="{Binding NetworkBufferMs, StringFormat='{}{0} ms'}"
+                                               Width="80" />
+                                </StackPanel>
+                                <TextBlock Classes="body-small"
+                                           Text="Buffer lato ricevente. Più alto = più tolleranza al jitter, più latenza." />
+                            </StackPanel>
+                        </Border>
+
+                        <!-- mDNS + IP -->
+                        <Border Classes="card-default">
+                            <StackPanel Spacing="12">
+                                <TextBlock Classes="label" Text="Scoperta dispositivi" />
+                                <StackPanel Orientation="Horizontal" Spacing="12">
+                                    <TextBlock Classes="body" Text="mDNS discovery" VerticalAlignment="Center" />
+                                    <ToggleSwitch IsChecked="{Binding MdnsEnabled}" />
+                                </StackPanel>
+                                <Separator />
+                                <TextBlock Classes="label" Text="IP manuale (fallback)" />
+                                <TextBox Text="{Binding ManualIp}"
+                                         Watermark="es. 192.168.1.100"
+                                         HorizontalAlignment="Stretch" />
+                                <TextBlock Classes="body-small"
+                                           Text="L'IP manuale è sempre visibile come fallback nella schermata principale." />
+                            </StackPanel>
+                        </Border>
+
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+
+            <!-- ========== TAB 3 — AVANZATE ========== -->
+            <TabItem Header="Avanzate">
+                <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+                    <StackPanel Spacing="20" Margin="0,16,0,0">
+
+                        <!-- Jitter buffer Android -->
+                        <Border Classes="card-default">
+                            <StackPanel Spacing="12">
+                                <TextBlock Classes="label" Text="Jitter buffer suggerito (Android)" />
+                                <StackPanel Orientation="Horizontal" Spacing="12">
+                                    <Slider Minimum="1" Maximum="20" TickFrequency="1"
+                                            Value="{Binding JitterBufferFrames}"
+                                            Width="240"
+                                            VerticalAlignment="Center" />
+                                    <TextBlock Classes="numeric"
+                                               Text="{Binding JitterBufferFrames, StringFormat='{}{0} frame'}"
+                                               Width="80" />
+                                </StackPanel>
+                                <TextBlock Classes="body-small"
+                                           Text="Numero di frame conservati dal client Android per compensare il jitter di rete." />
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Avvio e chiusura -->
+                        <Border Classes="card-default">
+                            <StackPanel Spacing="12">
+                                <TextBlock Classes="label" Text="Comportamento app" />
+                                <StackPanel Orientation="Horizontal" Spacing="12">
+                                    <CheckBox IsChecked="{Binding AutoStartWithWindows}"
+                                              Content="Avvia con Windows" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Spacing="12">
+                                    <CheckBox IsChecked="{Binding MinimizeToTray}"
+                                              Content="Minimizza nella system tray invece di chiudere" />
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+        </TabControl>
+
+        <!-- Reset defaults button -->
+        <Border Grid.Row="2" Padding="24,0,24,20"
+                Background="Transparent">
+            <Button Classes="warning"
+                    Command="{Binding ResetToDefaultsCommand}"
+                    HorizontalAlignment="Stretch"
+                    Height="44"
+                    FontSize="14">
+                <TextBlock Text="Ripristina impostazioni predefinite"
+                           FontWeight="SemiBold" />
+            </Button>
+        </Border>
+
+    </Grid>
+</Window>

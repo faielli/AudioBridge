@@ -1,0 +1,76 @@
+# .NET / Avalonia
+bin/
+obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+.vs/
+*.dll
+*.exe
+*.pdb
+*.cache
+
+
+# Android / Gradle
+.gradle/
+local.properties
+*.apk
+*.aab
+*.ap_
+*.dex
+build/
+captures/
+.externalNativeBuild/
+*.keystore
+!/android/app/src/main/res/raw/keystore
+*.jks
+*.jks.lock
+
+# IDE
+.idea/
+*.iml
+*.iws
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# OS
+ehthumbs.db
+Desktop.ini
+
+# Logs
+*.log
+logs/
+
+# Audio test files
+*.wav
+*.opus
+test_audio/
+
+# Rider / ReSharper
+_ReSharper*/
+*.dotCover
+
+# VS Code
+.vscode/
+!.vscode/settings.json
+!.vscode/launch.json
+!.vscode/tasks.json
+!.vscode/extensions.json
+
+# Publish output
+publish/
+# Installer output
+installer/
+
+android/app/.cxx
+
+*.jks
+*.keystore
+audiobridge.jks
+
+AudioBridge_Progetto_Sviluppo.md
+PROGETTO_AudioBridge.md

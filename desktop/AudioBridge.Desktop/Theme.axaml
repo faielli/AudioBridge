@@ -1,0 +1,79 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=System.Runtime">
+
+    <!-- ============================================================
+         COLOR TOKENS — Dark Theme (Default)
+         ============================================================ -->
+    <Color x:Key="Color.Background">#15161B</Color>
+    <Color x:Key="Color.Surface">#1E2028</Color>
+    <Color x:Key="Color.SurfaceElevated">#262A35</Color>
+    <Color x:Key="Color.AccentPrimary">#6C8CFF</Color>
+    <Color x:Key="Color.AccentSecondary">#7ED9C3</Color>
+    <Color x:Key="Color.AccentWarning">#F2B84B</Color>
+    <Color x:Key="Color.TextPrimary">#F2F3F7</Color>
+    <Color x:Key="Color.TextSecondary">#9498A8</Color>
+    <Color x:Key="Color.Border">#3A3E4A</Color>
+    <Color x:Key="Color.BorderFocus">#6C8CFF</Color>
+    <Color x:Key="Color.Disabled">#4A4E5A</Color>
+    <Color x:Key="Color.Error">#FF6B6B</Color>
+    <Color x:Key="Color.Success">#7ED9C3</Color>
+
+    <!-- ============================================================
+         COLOR TOKENS — Light Theme (activated via ThemeVariant)
+         ============================================================ -->
+    <Color x:Key="Color.Background.Light">#F7F7FA</Color>
+    <Color x:Key="Color.Surface.Light">#FFFFFF</Color>
+    <Color x:Key="Color.SurfaceElevated.Light">#F0F0F5</Color>
+    <Color x:Key="Color.AccentPrimary.Light">#6C8CFF</Color>
+    <Color x:Key="Color.AccentSecondary.Light">#7ED9C3</Color>
+    <Color x:Key="Color.AccentWarning.Light">#F2B84B</Color>
+    <Color x:Key="Color.TextPrimary.Light">#1A1B22</Color>
+    <Color x:Key="Color.TextSecondary.Light">#5A5D6E</Color>
+    <Color x:Key="Color.Border.Light">#D0D0D8</Color>
+    <Color x:Key="Color.BorderFocus.Light">#6C8CFF</Color>
+    <Color x:Key="Color.Disabled.Light">#A0A3B0</Color>
+    <Color x:Key="Color.Error.Light">#B3261E</Color>
+    <Color x:Key="Color.Success.Light">#7ED9C3</Color>
+
+    <!-- ============================================================
+         BRUSH ALIASES — use these keys everywhere in the app.
+         ============================================================ -->
+    <SolidColorBrush x:Key="BackgroundBrush" Color="{DynamicResource Color.Background}" />
+    <SolidColorBrush x:Key="SurfaceBrush" Color="{DynamicResource Color.Surface}" />
+    <SolidColorBrush x:Key="SurfaceElevatedBrush" Color="{DynamicResource Color.SurfaceElevated}" />
+    <SolidColorBrush x:Key="AccentPrimaryBrush" Color="{DynamicResource Color.AccentPrimary}" />
+    <SolidColorBrush x:Key="AccentSecondaryBrush" Color="{DynamicResource Color.AccentSecondary}" />
+    <SolidColorBrush x:Key="AccentWarningBrush" Color="{DynamicResource Color.AccentWarning}" />
+    <SolidColorBrush x:Key="TextPrimaryBrush" Color="{DynamicResource Color.TextPrimary}" />
+    <SolidColorBrush x:Key="TextSecondaryBrush" Color="{DynamicResource Color.TextSecondary}" />
+    <SolidColorBrush x:Key="BorderBrush" Color="{DynamicResource Color.Border}" />
+    <SolidColorBrush x:Key="BorderFocusBrush" Color="{DynamicResource Color.BorderFocus}" />
+    <SolidColorBrush x:Key="DisabledBrush" Color="{DynamicResource Color.Disabled}" />
+    <SolidColorBrush x:Key="ErrorBrush" Color="{DynamicResource Color.Error}" />
+    <SolidColorBrush x:Key="SuccessBrush" Color="{DynamicResource Color.Success}" />
+
+    <!-- ============================================================
+         CORNER RADIUS TOKENS
+         ============================================================ -->
+    <CornerRadius x:Key="Radius.Small">4</CornerRadius>
+    <CornerRadius x:Key="Radius.Input">10</CornerRadius>
+    <CornerRadius x:Key="Radius.Button">10</CornerRadius>
+    <CornerRadius x:Key="Radius.Card">14</CornerRadius>
+    <CornerRadius x:Key="Radius.Panel">20</CornerRadius>
+
+    <!-- ============================================================
+         SHADOW / ELEVATION TOKENS
+         ============================================================ -->
+    <x:Double x:Key="Shadow.BlurRadius">8</x:Double>
+    <x:Double x:Key="Shadow.Opacity">0.08</x:Double>
+    <x:Double x:Key="Shadow.OffsetY">2</x:Double>
+
+    <!-- ============================================================
+         FONT FAMILY TOKENS
+         Inter for UI (via WithInterFont()), Consolas for mono
+         ============================================================ -->
+    <FontFamily x:Key="FontFamily.UI">Inter</FontFamily>
+    <FontFamily x:Key="FontFamily.Mono">Consolas, JetBrains Mono, monospace</FontFamily>
+
+</ResourceDictionary>
