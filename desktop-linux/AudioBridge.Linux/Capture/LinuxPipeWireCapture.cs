@@ -47,7 +47,7 @@ public sealed class LinuxPipeWireCapture : IAudioCapture, IDisposable
 
     private void StartProcess()
     {
-        var target = string.IsNullOrEmpty(TargetSink) ? "@DEFAULT_MONITOR@" : $"{TargetSink}.monitor";
+        var target = string.IsNullOrEmpty(TargetSink) ? GetDefaultMonitor() : $"{TargetSink}.monitor";
         var psi = new ProcessStartInfo
         {
             FileName = "pw-record",
@@ -80,6 +80,32 @@ public sealed class LinuxPipeWireCapture : IAudioCapture, IDisposable
 
         _readTask = Task.Run(() => ReadLoopAsync(_cts!.Token));
         _stderrTask = Task.Run(() => StderrLoopAsync(_cts!.Token));
+    }
+
+    private static string GetDefaultMonitor()
+    {
+        try
+        {
+            var psi = new ProcessStartInfo
+            {
+                FileName = "pactl",
+                Arguments = "get-default-sink",
+                RedirectStandardOutput = true,
+                UseShellExecute = false,
+                CreateNoWindow = true,
+            };
+            using var proc = Process.Start(psi);
+            if (proc == null) return "@DEFAULT_MONITOR@";
+            var name = proc.StandardOutput.ReadToEnd().Trim();
+            proc.WaitForExit(2000);
+            if (name.Length > 0)
+                return $"{name}.monitor";
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[AudioBridge] pactl get-default-sink fallito: {ex.Message}");
+        }
+        return "@DEFAULT_MONITOR@";
     }
 
     private async Task ReadLoopAsync(CancellationToken ct)
