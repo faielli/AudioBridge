@@ -50,8 +50,8 @@ public sealed class LinuxPipeWireCapture : IAudioCapture, IDisposable
         var target = string.IsNullOrEmpty(TargetSink) ? GetDefaultMonitor() : $"{TargetSink}.monitor";
         var psi = new ProcessStartInfo
         {
-            FileName = "pw-record",
-            Arguments = $"--target={target} --format=s32 --rate=48000 --channels=2 --latency=20ms -",
+            FileName = "parec",
+            Arguments = $"--device={target} --format=s32le --rate=48000 --channels=2 --latency-msec=20 --raw",
             RedirectStandardOutput = true,
             RedirectStandardError = true,
             UseShellExecute = false,
@@ -65,13 +65,13 @@ public sealed class LinuxPipeWireCapture : IAudioCapture, IDisposable
         catch (System.ComponentModel.Win32Exception)
         {
             ErrorOccurred?.Invoke(this, new InvalidOperationException(
-                "pw-record non trovato. Installa PipeWire: sudo pacman -S pipewire pipewire-pulse"));
+                "parec non trovato — installa PipeWire: sudo pacman -S pipewire-pulse"));
             return;
         }
 
         if (_process == null)
         {
-            ErrorOccurred?.Invoke(this, new InvalidOperationException("Impossibile avviare pw-record"));
+            ErrorOccurred?.Invoke(this, new InvalidOperationException("Impossibile avviare parec"));
             return;
         }
 
@@ -95,7 +95,7 @@ public sealed class LinuxPipeWireCapture : IAudioCapture, IDisposable
                 CreateNoWindow = true,
             };
             using var proc = Process.Start(psi);
-            if (proc == null) return "@DEFAULT_MONITOR@";
+            if (proc == null) return "alsa_output.pci-0000_00_1f.3.analog-stereo.monitor";
             var output = proc.StandardOutput.ReadToEnd();
             proc.WaitForExit(2000);
             foreach (var line in output.Split('\n'))
@@ -103,15 +103,15 @@ public sealed class LinuxPipeWireCapture : IAudioCapture, IDisposable
                 var t = line.Trim();
                 if (!t.Contains(".monitor")) continue;
                 var parts = t.Split('\t');
-                if (parts.Length >= 1 && parts[0].Trim().Length > 0)
-                    return parts[0].Trim();
+                if (parts.Length >= 2 && parts[1].Trim().Length > 0)
+                    return parts[1].Trim();
             }
         }
         catch (Exception ex)
         {
             Console.WriteLine($"[AudioBridge] pactl list sources short fallito: {ex.Message}");
         }
-        return "@DEFAULT_MONITOR@";
+        return "alsa_output.pci-0000_00_1f.3.analog-stereo.monitor";
     }
 
     private async Task ReadLoopAsync(CancellationToken ct)
@@ -172,13 +172,13 @@ public sealed class LinuxPipeWireCapture : IAudioCapture, IDisposable
             {
                 var line = await reader.ReadLineAsync(ct);
                 if (line == null) break;
-                Console.WriteLine($"[pw-record] {line}");
+                Console.WriteLine($"[parec] {line}");
             }
         }
         catch (OperationCanceledException) { }
         catch (Exception ex)
         {
-            Console.WriteLine($"[pw-record] Errore lettura stderr: {ex.Message}");
+            Console.WriteLine($"[parec] Errore lettura stderr: {ex.Message}");
         }
     }
 
@@ -190,7 +190,7 @@ public sealed class LinuxPipeWireCapture : IAudioCapture, IDisposable
         _restartCount++;
         if (_restartCount <= MaxRestarts)
         {
-            Console.WriteLine($"[AudioBridge] pw-record terminato, riavvio tentativo {_restartCount}/{MaxRestarts}...");
+            Console.WriteLine($"[AudioBridge] parec terminato, riavvio tentativo {_restartCount}/{MaxRestarts}...");
             Task.Delay(500).ContinueWith(_ =>
             {
                 if (_cts?.IsCancellationRequested == false)
@@ -203,7 +203,7 @@ public sealed class LinuxPipeWireCapture : IAudioCapture, IDisposable
         else
         {
             ErrorOccurred?.Invoke(this, new InvalidOperationException(
-                "pw-record terminato inaspettatamente dopo 3 tentativi di riavvio"));
+                "parec terminato inaspettatamente dopo 3 tentativi di riavvio"));
         }
     }
 
