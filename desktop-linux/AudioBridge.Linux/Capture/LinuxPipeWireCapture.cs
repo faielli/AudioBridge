@@ -26,7 +26,7 @@ public sealed class LinuxPipeWireCapture : IAudioCapture, IDisposable
     private Task? _stderrTask;
     private int _restartCount;
     private const int MaxRestarts = 3;
-    private const int ChunkSizeBytes = 48000 * 2 * sizeof(short) * 20 / 1000;
+    private const int ChunkSizeBytes = 48000 * 2 * sizeof(int) * 20 / 1000;
 
     public void Start()
     {
@@ -51,7 +51,7 @@ public sealed class LinuxPipeWireCapture : IAudioCapture, IDisposable
         var psi = new ProcessStartInfo
         {
             FileName = "pw-record",
-            Arguments = $"--target={target} --format=s16 --rate=48000 --channels=2 --latency=20ms -",
+            Arguments = $"--target={target} --format=s32 --rate=48000 --channels=2 --latency=20ms -",
             RedirectStandardOutput = true,
             RedirectStandardError = true,
             UseShellExecute = false,
@@ -89,21 +89,27 @@ public sealed class LinuxPipeWireCapture : IAudioCapture, IDisposable
             var psi = new ProcessStartInfo
             {
                 FileName = "pactl",
-                Arguments = "get-default-sink",
+                Arguments = "list sources short",
                 RedirectStandardOutput = true,
                 UseShellExecute = false,
                 CreateNoWindow = true,
             };
             using var proc = Process.Start(psi);
             if (proc == null) return "@DEFAULT_MONITOR@";
-            var name = proc.StandardOutput.ReadToEnd().Trim();
+            var output = proc.StandardOutput.ReadToEnd();
             proc.WaitForExit(2000);
-            if (name.Length > 0)
-                return $"{name}.monitor";
+            foreach (var line in output.Split('\n'))
+            {
+                var t = line.Trim();
+                if (!t.Contains(".monitor")) continue;
+                var parts = t.Split('\t');
+                if (parts.Length >= 2 && parts[1].Trim().Length > 0)
+                    return parts[1].Trim();
+            }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"[AudioBridge] pactl get-default-sink fallito: {ex.Message}");
+            Console.WriteLine($"[AudioBridge] pactl list sources short fallito: {ex.Message}");
         }
         return "@DEFAULT_MONITOR@";
     }
@@ -111,29 +117,29 @@ public sealed class LinuxPipeWireCapture : IAudioCapture, IDisposable
     private async Task ReadLoopAsync(CancellationToken ct)
     {
         var stream = _process!.StandardOutput.BaseStream;
-        var s16Buffer = new byte[ChunkSizeBytes];
+        var s32Buffer = new byte[ChunkSizeBytes];
 
         try
         {
             while (!ct.IsCancellationRequested && _isCapturing)
             {
                 int totalRead = 0;
-                while (totalRead < s16Buffer.Length && !ct.IsCancellationRequested)
+                while (totalRead < s32Buffer.Length && !ct.IsCancellationRequested)
                 {
                     int read = await stream.ReadAsync(
-                        s16Buffer.AsMemory(totalRead, s16Buffer.Length - totalRead), ct);
+                        s32Buffer.AsMemory(totalRead, s32Buffer.Length - totalRead), ct);
                     if (read == 0) break;
                     totalRead += read;
                 }
 
                 if (totalRead == 0) break;
 
-                int sampleCount = totalRead / sizeof(short);
+                int sampleCount = totalRead / sizeof(int);
                 var float32 = new byte[sampleCount * sizeof(float)];
                 for (int i = 0; i < sampleCount; i++)
                 {
-                    short s = (short)(s16Buffer[i * 2] | (s16Buffer[i * 2 + 1] << 8));
-                    float f = s / 32768f;
+                    int s32 = BitConverter.ToInt32(s32Buffer, i * 4);
+                    float f = s32 / 2147483648f;
                     var fb = BitConverter.GetBytes(f);
                     float32[i * 4] = fb[0];
                     float32[i * 4 + 1] = fb[1];
