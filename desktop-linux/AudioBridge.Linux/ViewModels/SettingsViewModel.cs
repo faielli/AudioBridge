@@ -1,5 +1,6 @@
 using System;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -16,14 +17,20 @@ public partial class SettingsViewModel : ViewModelBase
 
     public AppSettings AppSettings { get; private set; }
 
-    public ObservableCollection<string> AudioDevices { get; } = [];
+    public ObservableCollection<AudioDeviceInfo> AudioDevices { get; } = [];
     public int[] SampleRateOptions => [44100, 48000];
     public int[] ValidFrameSizes => [10, 20, 40, 60];
 
     public Func<Task<bool>>? ConfirmResetAsync { get; set; }
 
     [ObservableProperty]
-    private string _selectedAudioDevice = "";
+    private AudioDeviceInfo? _selectedDeviceInfo;
+
+    partial void OnSelectedDeviceInfoChanged(AudioDeviceInfo? value)
+    {
+        if (value != null && !_isLoading)
+            Save();
+    }
 
     [ObservableProperty]
     private int _selectedSampleRate = 48000;
@@ -80,14 +87,55 @@ public partial class SettingsViewModel : ViewModelBase
     private void EnumerateAudioDevices()
     {
         AudioDevices.Clear();
-        AudioDevices.Add("Default");
-        if (AudioDevices.Count > 0 && !AudioDevices.Contains(SelectedAudioDevice))
-            SelectedAudioDevice = AudioDevices[0];
+        try
+        {
+            var psi = new ProcessStartInfo
+            {
+                FileName = "pactl",
+                Arguments = "list sinks",
+                RedirectStandardOutput = true,
+                UseShellExecute = false,
+                CreateNoWindow = true,
+            };
+            using var process = Process.Start(psi);
+            if (process == null)
+                throw new InvalidOperationException("pactl non trovato");
+
+            var output = process.StandardOutput.ReadToEnd();
+            process.WaitForExit(2000);
+
+            string currentName = "";
+            foreach (var line in output.Split('\n'))
+            {
+                var t = line.Trim();
+                if (t.StartsWith("Name:"))
+                    currentName = t["Name:".Length..].Trim();
+                else if (t.StartsWith("Description:") && currentName.Length > 0)
+                {
+                    AudioDevices.Add(new AudioDeviceInfo
+                    {
+                        Name = currentName,
+                        Description = t["Description:".Length..].Trim()
+                    });
+                    currentName = "";
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[Settings] pactl fallito: {ex.Message}");
+        }
+
+        if (AudioDevices.Count == 0)
+            AudioDevices.Add(new AudioDeviceInfo { Name = "", Description = "Default (fallback)" });
+
+        var saved = AppSettings.AudioDeviceName;
+        var match = AudioDevices.FirstOrDefault(d => d.Name == saved);
+        SelectedDeviceInfo = match ?? AudioDevices[0];
     }
 
     private void LoadFromSettings()
     {
-        SelectedAudioDevice = AppSettings.AudioDeviceName;
         SelectedSampleRate = AppSettings.SampleRate;
         IsStereo = AppSettings.IsStereo;
         BitrateKbps = AppSettings.Bitrate / 1000;
@@ -103,7 +151,6 @@ public partial class SettingsViewModel : ViewModelBase
         MinimizeToTray = AppSettings.MinimizeToTray;
     }
 
-    partial void OnSelectedAudioDeviceChanged(string value) { if (!_isLoading) Save(); }
     partial void OnSelectedSampleRateChanged(int value) { if (!_isLoading) Save(); }
     partial void OnIsStereoChanged(bool value) { if (!_isLoading) Save(); }
     partial void OnBitrateKbpsChanged(int value) { if (!_isLoading) Save(); }
@@ -128,7 +175,7 @@ public partial class SettingsViewModel : ViewModelBase
 
     private void Save()
     {
-        AppSettings.AudioDeviceName = SelectedAudioDevice;
+        AppSettings.AudioDeviceName = SelectedDeviceInfo?.Name ?? "";
         AppSettings.SampleRate = SelectedSampleRate;
         AppSettings.SetStereo(IsStereo);
         AppSettings.Bitrate = BitrateKbps * 1000;

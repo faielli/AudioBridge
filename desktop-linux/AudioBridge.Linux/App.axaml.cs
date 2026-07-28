@@ -20,7 +20,10 @@ public partial class App : Application
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             var settingsService = new SettingsService();
+            var settings = settingsService.Load();
             var capture = new LinuxPipeWireCapture();
+            if (!string.IsNullOrEmpty(settings.AudioDeviceName))
+                capture.TargetSink = settings.AudioDeviceName;
             desktop.MainWindow = new MainWindow
             {
                 DataContext = new MainViewModel(capture, settingsService),

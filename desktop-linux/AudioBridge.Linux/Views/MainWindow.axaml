@@ -7,7 +7,7 @@
         mc:Ignorable="d" d:DesignWidth="520" d:DesignHeight="800"
         x:Class="AudioBridge.Desktop.Views.MainWindow"
         x:DataType="vm:MainViewModel"
-        Icon="avares://AudioBridge.Desktop/Assets/audiobridge.ico"
+        Icon="avares://AudioBridge.Linux/Assets/audiobridge.ico"
         Title="AudioBridge"
         Background="{DynamicResource BackgroundBrush}"
         Width="520" Height="760"

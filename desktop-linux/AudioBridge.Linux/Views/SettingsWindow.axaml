@@ -57,8 +57,14 @@
                             <StackPanel Spacing="12">
                                 <TextBlock Classes="label" Text="Sorgente audio" />
                                 <ComboBox ItemsSource="{Binding AudioDevices}"
-                                          SelectedItem="{Binding SelectedAudioDevice}"
-                                          HorizontalAlignment="Stretch" />
+                                          SelectedItem="{Binding SelectedDeviceInfo}"
+                                          HorizontalAlignment="Stretch">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Description}" />
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
                                 <TextBlock Classes="body-small"
                                            Text="Dispositivo di output da catturare (loopback)" />
                             </StackPanel>

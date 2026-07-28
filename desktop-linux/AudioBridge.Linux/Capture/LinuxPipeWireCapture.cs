@@ -17,6 +17,8 @@ public sealed class LinuxPipeWireCapture : IAudioCapture, IDisposable
     public event EventHandler<Exception>? ErrorOccurred;
     public event EventHandler<bool>? IsCapturingChanged;
 
+    public string? TargetSink { get; set; }
+
     private volatile bool _isCapturing;
     private Process? _process;
     private CancellationTokenSource? _cts;
@@ -45,10 +47,11 @@ public sealed class LinuxPipeWireCapture : IAudioCapture, IDisposable
 
     private void StartProcess()
     {
+        var target = string.IsNullOrEmpty(TargetSink) ? "@DEFAULT_MONITOR@" : $"{TargetSink}.monitor";
         var psi = new ProcessStartInfo
         {
             FileName = "pw-record",
-            Arguments = "--target=@DEFAULT_MONITOR@ --format=s16 --rate=48000 --channels=2 --latency=20ms -",
+            Arguments = $"--target={target} --format=s16 --rate=48000 --channels=2 --latency=20ms -",
             RedirectStandardOutput = true,
             RedirectStandardError = true,
             UseShellExecute = false,
