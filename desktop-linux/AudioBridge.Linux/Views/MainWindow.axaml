@@ -125,6 +125,19 @@
                                FontWeight="SemiBold" />
                 </Button>
 
+                <!-- Diagnostics: test capture -->
+                <Border Classes="card-default" Padding="12">
+                    <StackPanel Spacing="8">
+                        <TextBlock Classes="label" Text="Diagnostica" />
+                        <Button Command="{Binding RecordTestCommand}"
+                                Height="32"
+                                FontSize="13"
+                                HorizontalContentAlignment="Center">
+                            <TextBlock Text="Cattura 5s → WAV" />
+                        </Button>
+                    </StackPanel>
+                </Border>
+
             </StackPanel>
         </ScrollViewer>
 

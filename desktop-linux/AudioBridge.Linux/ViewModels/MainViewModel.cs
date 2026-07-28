@@ -179,8 +179,7 @@ public partial class MainViewModel : ViewModelBase
 
         try
         {
-            var desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-            var filePath = Path.Combine(desktopPath, $"audiobridge-test_{DateTime.Now:yyyyMMdd-HHmmss}.wav");
+            var filePath = "/tmp/audiobridge_test.wav";
 
             using var ms = new MemoryStream();
             using (var writer = new BinaryWriter(ms))
