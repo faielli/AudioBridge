@@ -23,6 +23,7 @@
     </PackageReference>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
     <PackageReference Include="Concentus" Version="2.2.2" />
+    <PackageReference Include="Concentus.Native" Version="*" ExcludeAssets="all" />
     <PackageReference Include="Makaretu.Dns.Multicast.New" Version="0.38.0" />
   </ItemGroup>
 </Project>

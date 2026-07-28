@@ -1,4 +1,3 @@
-using Concentus;
 using Concentus.Enums;
 using Concentus.Structs;
 using System;
@@ -46,7 +45,7 @@ public sealed class OpusEncoderWrapper : IDisposable
         Bitrate = bitrate;
         FrameSizeMs = frameSizeMs;
 
-        _encoder = (Concentus.Structs.OpusEncoder)OpusCodecFactory.CreateEncoder(sampleRate, channels, OpusApplication.OPUS_APPLICATION_AUDIO);
+        _encoder = new Concentus.Structs.OpusEncoder(sampleRate, channels, OpusApplication.OPUS_APPLICATION_AUDIO);
         _encoder.Bitrate = bitrate;
         _encoder.Complexity = 5;
 
