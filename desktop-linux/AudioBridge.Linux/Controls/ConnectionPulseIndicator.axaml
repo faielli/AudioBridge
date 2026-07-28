@@ -1,0 +1,56 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="48" d:DesignHeight="48"
+             x:Class="AudioBridge.Desktop.Controls.ConnectionPulseIndicator"
+             x:Name="Root">
+
+    <Panel Width="48" Height="48">
+        <!-- Outer breathing ring (animates only in Connecting state) -->
+        <Ellipse x:Name="OuterRing"
+                 Stroke="{DynamicResource AccentPrimaryBrush}"
+                 StrokeThickness="3"
+                 Fill="Transparent"
+                 Opacity="0.6"
+                 Width="48" Height="48"
+                 IsVisible="False"
+                 RenderTransformOrigin="0.5,0.5">
+            <Ellipse.RenderTransform>
+                <ScaleTransform ScaleX="1" ScaleY="1" />
+            </Ellipse.RenderTransform>
+        </Ellipse>
+
+        <!-- Middle ring (animates in Connecting state) -->
+        <Ellipse x:Name="MiddleRing"
+                 Stroke="{DynamicResource AccentPrimaryBrush}"
+                 StrokeThickness="3"
+                 Fill="Transparent"
+                 Opacity="0.6"
+                 Width="36" Height="36"
+                 IsVisible="False"
+                 RenderTransformOrigin="0.5,0.5">
+            <Ellipse.RenderTransform>
+                <ScaleTransform ScaleX="1" ScaleY="1" />
+            </Ellipse.RenderTransform>
+        </Ellipse>
+
+        <!-- Inner solid dot - changes color based on state -->
+        <Ellipse x:Name="InnerDot"
+                 Width="16" Height="16"
+                 Fill="{DynamicResource DisabledBrush}"
+                 StrokeThickness="0"
+                 RenderTransformOrigin="0.5,0.5">
+            <Ellipse.RenderTransform>
+                <ScaleTransform ScaleX="1" ScaleY="1" />
+            </Ellipse.RenderTransform>
+        </Ellipse>
+
+        <!-- Tooltip for accessibility -->
+        <ToolTip.Tip>
+            <ToolTip x:Name="StateTooltip"
+                     Content="Disconnesso"
+                     Placement="Bottom" />
+        </ToolTip.Tip>
+    </Panel>
+</UserControl>

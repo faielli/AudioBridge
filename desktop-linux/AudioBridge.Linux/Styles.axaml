@@ -1,0 +1,171 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- ============================================================
+         BASE TEXT STYLES (applied via Classes="headline title body ...")
+         ============================================================ -->
+    <Style Selector="TextBlock.headline">
+        <Setter Property="FontFamily" Value="{DynamicResource FontFamily.UI}" />
+        <Setter Property="FontSize" Value="28" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
+        <Setter Property="LineHeight" Value="36" />
+    </Style>
+
+    <Style Selector="TextBlock.title">
+        <Setter Property="FontFamily" Value="{DynamicResource FontFamily.UI}" />
+        <Setter Property="FontSize" Value="22" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
+        <Setter Property="LineHeight" Value="28" />
+    </Style>
+
+    <Style Selector="TextBlock.body">
+        <Setter Property="FontFamily" Value="{DynamicResource FontFamily.UI}" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontWeight" Value="Normal" />
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
+        <Setter Property="LineHeight" Value="20" />
+    </Style>
+
+    <Style Selector="TextBlock.body-small">
+        <Setter Property="FontFamily" Value="{DynamicResource FontFamily.UI}" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="FontWeight" Value="Normal" />
+        <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}" />
+        <Setter Property="LineHeight" Value="16" />
+    </Style>
+
+    <Style Selector="TextBlock.label">
+        <Setter Property="FontFamily" Value="{DynamicResource FontFamily.UI}" />
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="FontWeight" Value="Medium" />
+        <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}" />
+        <Setter Property="LineHeight" Value="18" />
+    </Style>
+
+    <Style Selector="TextBlock.numeric">
+        <Setter Property="FontFamily" Value="{DynamicResource FontFamily.Mono}" />
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="FontWeight" Value="Medium" />
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
+    </Style>
+
+    <Style Selector="TextBlock.numeric-large">
+        <Setter Property="FontFamily" Value="{DynamicResource FontFamily.Mono}" />
+        <Setter Property="FontSize" Value="28" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
+    </Style>
+
+    <!-- ============================================================
+         BUTTON STYLES
+         ============================================================ -->
+    <Style Selector="Button">
+        <Setter Property="FontFamily" Value="{DynamicResource FontFamily.UI}" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Padding" Value="20,12" />
+        <Setter Property="CornerRadius" Value="{DynamicResource Radius.Button}" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Background" Value="{DynamicResource SurfaceElevatedBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+    </Style>
+
+    <Style Selector="Button.primary">
+        <Setter Property="Background" Value="{DynamicResource AccentPrimaryBrush}" />
+        <Setter Property="Foreground" Value="#15161B" />
+        <Setter Property="BorderThickness" Value="0" />
+    </Style>
+
+    <Style Selector="Button.ghost">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+    </Style>
+
+    <Style Selector="Button.destructive">
+        <Setter Property="Background" Value="{DynamicResource ErrorBrush}" />
+        <Setter Property="Foreground" Value="#FFFFFF" />
+        <Setter Property="BorderThickness" Value="0" />
+    </Style>
+
+    <Style Selector="Button.warning">
+        <Setter Property="Background" Value="{DynamicResource AccentWarningBrush}" />
+        <Setter Property="Foreground" Value="#15161B" />
+        <Setter Property="BorderThickness" Value="0" />
+    </Style>
+
+    <!-- ============================================================
+         CARD / CONTAINER STYLES
+         ============================================================ -->
+    <Style Selector="Border.card-default">
+        <Setter Property="Background" Value="{DynamicResource SurfaceBrush}" />
+        <Setter Property="CornerRadius" Value="{DynamicResource Radius.Card}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Padding" Value="16" />
+    </Style>
+
+    <Style Selector="Border.card-elevated">
+        <Setter Property="Background" Value="{DynamicResource SurfaceElevatedBrush}" />
+        <Setter Property="CornerRadius" Value="{DynamicResource Radius.Panel}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Padding" Value="16" />
+    </Style>
+
+    <Style Selector="Border.panel-main">
+        <Setter Property="Background" Value="{DynamicResource BackgroundBrush}" />
+        <Setter Property="CornerRadius" Value="{DynamicResource Radius.Panel}" />
+    </Style>
+
+    <!-- ============================================================
+         INPUT CONTROLS
+         ============================================================ -->
+    <Style Selector="TextBox">
+        <Setter Property="Background" Value="{DynamicResource SurfaceBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{DynamicResource Radius.Input}" />
+        <Setter Property="Padding" Value="12,10" />
+        <Setter Property="FontFamily" Value="{DynamicResource FontFamily.UI}" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="CaretBrush" Value="{DynamicResource AccentPrimaryBrush}" />
+        <Setter Property="SelectionBrush" Value="{DynamicResource AccentPrimaryBrush}" />
+    </Style>
+
+    <Style Selector="ComboBox">
+        <Setter Property="Background" Value="{DynamicResource SurfaceBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{DynamicResource Radius.Input}" />
+        <Setter Property="Padding" Value="12,10" />
+        <Setter Property="FontFamily" Value="{DynamicResource FontFamily.UI}" />
+        <Setter Property="FontSize" Value="14" />
+    </Style>
+
+    <Style Selector="Slider">
+        <Setter Property="Background" Value="{DynamicResource BorderBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource AccentPrimaryBrush}" />
+        <Setter Property="Height" Value="24" />
+    </Style>
+
+    <Style Selector="ToggleSwitch">
+        <Setter Property="Foreground" Value="{DynamicResource AccentPrimaryBrush}" />
+    </Style>
+
+    <!-- ============================================================
+         SEPARATOR
+         ============================================================ -->
+    <Style Selector="Separator">
+        <Setter Property="Background" Value="{DynamicResource BorderBrush}" />
+        <Setter Property="Opacity" Value="0.5" />
+    </Style>
+
+</Styles>
