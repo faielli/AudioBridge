@@ -103,8 +103,8 @@ public sealed class LinuxPipeWireCapture : IAudioCapture, IDisposable
                 var t = line.Trim();
                 if (!t.Contains(".monitor")) continue;
                 var parts = t.Split('\t');
-                if (parts.Length >= 2 && parts[1].Trim().Length > 0)
-                    return parts[1].Trim();
+                if (parts.Length >= 1 && parts[0].Trim().Length > 0)
+                    return parts[0].Trim();
             }
         }
         catch (Exception ex)
